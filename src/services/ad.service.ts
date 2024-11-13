@@ -21,25 +21,26 @@ const adsList: Ad[] = [
   },
 ];
 export default class AdService {
-    listAds() {
-      return adsList;
+  listAds() {
+    return adsList;
+  }
+  findAdById(id: string) {
+    const ad = adsList.find((ad) => ad.id === id);
+    if (!ad) {
+      throw new Error("L'annonce n'existe pas");
     }
-    findAdById(id: string) {
-      const ad = adsList.find((ad) => ad.id === id);
-      if (!ad) {
-        throw new Error("L'annonce n'existe pas");
-      }
-      return ad;
+    return ad;
+  }
+  create(ad: Ad) {
+    const adExists = adsList.some((a) => a.id === ad.id);
+    if (adExists) {
+      throw new Error("L'annonce existe déjà");
     }
-    create(ad: Ad){
-        //1ere solution : index
-        //2eme solution: checkAd => rappeler findAdById
-         
-        adsList
-        adsList.push(ad)
-        console.info(adsList)
-        return ad.id
-      }
-    }
+
+    adsList.push(ad);
+    return ad;
+  }
+}
+
     
   

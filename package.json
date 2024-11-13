@@ -25,7 +25,26 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-emoji"
+      "path": "./node_modules/cz-conventional-changelog",
+      "types": {
+        "feat": {
+          "description": "A new feature",
+          "title": ":sparkles: feat"
+        },
+        "fix": {
+          "description": "A bug fix",
+          "title": ":bug: fix"
+        },
+        "chore": {
+          "description": "Other changes",
+          "title": ":wrench: chore"
+        }
+      }
     }
   }
 }
+
+     
+      
+    
+  
