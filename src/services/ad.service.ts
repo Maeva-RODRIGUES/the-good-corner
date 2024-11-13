@@ -1,8 +1,7 @@
 //services/ad.service.ts
+import { Ad, PartialAdWithoutId } from "../types/ads.d";
 
-import { Ad } from "../types/ads.d";
-
-const adsList: Ad[] = [
+let adsList: Ad[] = [
   {
     id: "1",
     title: "Mon super titre 1",
@@ -39,6 +38,33 @@ export default class AdService {
 
     adsList.push(ad);
     return ad;
+  }
+  update(id: string, ad: Partial<PartialAdWithoutId>) {
+    const adFound = this.findAdById(id);
+
+    Object.keys(ad).forEach((k) => {
+      if (ad[k]) {
+        adFound[k] = ad[k];
+      }
+    });
+
+    console.log(adsList);
+
+    return adFound;
+  }
+  delete(id: string) {
+    const ad = this.findAdById(id);
+    adsList = adsList.filter((a) => a.id !== ad.id);
+
+    return ad.id;
+    // const adIndex = adsList.findIndex((ad) => ad.id === id);
+    // if (adIndex === -1) {
+    //   throw new Error("Ad not found");
+    // } else {
+    //   const adId = adsList[adIndex].id;
+    //   adsList.splice(adIndex, 1); //modificateur
+    //   return adId;
+    // }
   }
 }
 
