@@ -20,4 +20,4 @@ export type AdWithoutId<T extends object> = T & {
   price?: number;
 };
 
-export type PartialAdWithoutId = AdWithoutId<Partial<Omit<Object, "id">>>;
+export type PartialAdWithoutId = AdWithoutId<Partial<Omit<Ad, "id">>>;

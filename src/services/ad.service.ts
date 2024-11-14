@@ -1,5 +1,6 @@
 //services/ad.service.ts
 import { Ad, PartialAdWithoutId } from "../types/ads.d";
+import sqlite3 from "sqlite3";
 
 let adsList: Ad[] = [
   {
@@ -20,8 +21,24 @@ let adsList: Ad[] = [
   },
 ];
 export default class AdService {
-  listAds() {
-    return adsList;
+  db: sqlite3.Database;
+
+  //cours aujourd'hui sur la POO ;😅
+  constructor() {
+    this.db = new sqlite3.Database("the-good-corner.sqlite");
+  }
+
+  async listAds() {
+    return new Promise<Ad[]>((resolve, reject) => {
+      this.db.all<Ad>("SELECT * FROM ads", (err, rows) => {
+        if (err) {
+          reject(err.message);
+        }
+
+        resolve(rows);
+      });
+
+    });
   }
   findAdById(id: string) {
     const ad = adsList.find((ad) => ad.id === id);
@@ -43,8 +60,10 @@ export default class AdService {
     const adFound = this.findAdById(id);
 
     Object.keys(ad).forEach((k) => {
+      //title, description, picture, location, price
       if (ad[k]) {
-        adFound[k] = ad[k];
+        // si title n'est pas undefined :  if ad.title
+        adFound[k] = ad[k]; // title de l'annonce trouvée est égal au titre reçu adFound.title = ad.title
       }
     });
 
@@ -67,6 +86,4 @@ export default class AdService {
     // }
   }
 }
-
-    
   

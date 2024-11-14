@@ -2,15 +2,17 @@
 
 import { Router } from "express";
 import AdService from "../services/ad.service";
-import { Ad } from "../types/ads";
+import { Ad, PartialAdWithoutId} from "../types/ads";
 
 const router = Router();
 
-//GET
-router.get("/list", (req, res) => {
-  // router.get("/ads/list", (req, res) => {
-  const adsList = new AdService().listAds();
-  res.send(adsList);
+router.get("/list", async (req, res) => {
+  try {
+    const adsList = await new AdService().listAds();
+    res.send(adsList);
+  } catch (err: any) {
+    res.status(500).send({ message: err.message });
+  }
 });
 
 router.get("/find/:id", (req, res) => {
@@ -23,7 +25,7 @@ router.get("/find/:id", (req, res) => {
   }
 });
 
-// POST
+//express validator
 router.post("/create", (req, res) => {
   const { id, title, description, picture, location, price }: Ad = req.body;
 
@@ -45,12 +47,11 @@ router.post("/create", (req, res) => {
 });
 
 
-// PATCH
-router.patch("/update/:id",()=> {
+router.patch("/update/:id", (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, picture, location, price }: PartialAdWithoutId =
-      req.body;
+    // const { title, description, picture, location, price }: Partial<Ad>= req.body;
+    const { title, description, picture, location, price }: PartialAdWithoutId = req.body;
 
     const ad = { title, description, picture, location, price };
 
@@ -59,24 +60,20 @@ router.patch("/update/:id",()=> {
     res.send(adUpdate);
   } catch (error) {
     console.error(error);
-    res.send({ error: "L'article n'as pas était trouvé" });
+    res.send({ error: "L'article n'as pas été trouvé" });
   }
 });
 
-// DELETE
 router.delete("/delete/:id", (req, res) => {
   try {
     const { id } = req.params;
     const adDelete = new AdService().delete(id);
 
-    res.send({ message: `L'annonce ${adDelete} as bien était supprimé` });
+    res.send({ message: `L'annonce ${adDelete} as bien été supprimé` });
   } catch (error) {
     console.error(error);
     res.send({ error: "L'annonce n'as pas pu etre suprrimé" });
   }
 });
-
-
-
 export default router;
 
