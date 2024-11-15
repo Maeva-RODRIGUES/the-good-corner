@@ -12,7 +12,7 @@ export type Ad = {
 
 
 export type AdWithoutId<T extends object> = T & {
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
   title?: string;
   description?: string;
   picture?: string;

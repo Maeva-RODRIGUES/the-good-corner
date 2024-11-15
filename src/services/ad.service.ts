@@ -23,67 +23,97 @@ let adsList: Ad[] = [
 export default class AdService {
   db: sqlite3.Database;
 
-  //cours aujourd'hui sur la POO ;😅
+  //Initialisation de la connexion dans le constructeur
   constructor() {
-    this.db = new sqlite3.Database("the-good-corner.sqlite");
+    this.db = new sqlite3.Database("the-good-corner.db");
   }
 
   async listAds() {
     return new Promise<Ad[]>((resolve, reject) => {
-      this.db.all<Ad>("SELECT * FROM ads", (err, rows) => {
+      this.db.all<Ad>("SELECT * FROM ad", (err, rows) => {
         if (err) {
           reject(err.message);
         }
 
         resolve(rows);
       });
-
     });
   }
   findAdById(id: string) {
-    const ad = adsList.find((ad) => ad.id === id);
-    if (!ad) {
-      throw new Error("L'annonce n'existe pas");
-    }
-    return ad;
-  }
-  create(ad: Ad) {
-    const adExists = adsList.some((a) => a.id === ad.id);
-    if (adExists) {
-      throw new Error("L'annonce existe déjà");
-    }
+    return new Promise<Ad>((resolve, reject) => {
+      this.db.get<Ad>(
+        "SELECT * FROM ad WHERE id = ?",
+        [id],
+        (err: any, row) => {
+          if (err) {
+            reject(err.message);
+          }
 
-    adsList.push(ad);
-    return ad;
-  }
-  update(id: string, ad: Partial<PartialAdWithoutId>) {
-    const adFound = this.findAdById(id);
-
-    Object.keys(ad).forEach((k) => {
-      //title, description, picture, location, price
-      if (ad[k]) {
-        // si title n'est pas undefined :  if ad.title
-        adFound[k] = ad[k]; // title de l'annonce trouvée est égal au titre reçu adFound.title = ad.title
-      }
+          resolve(row);
+        }
+      );
     });
-
-    console.log(adsList);
-
-    return adFound;
   }
-  delete(id: string) {
-    const ad = this.findAdById(id);
-    adsList = adsList.filter((a) => a.id !== ad.id);
 
-    return ad.id;
-    // const adIndex = adsList.findIndex((ad) => ad.id === id);
-    // if (adIndex === -1) {
-    //   throw new Error("Ad not found");
-    // } else {
-    //   const adId = adsList[adIndex].id;
-    //   adsList.splice(adIndex, 1); //modificateur
-    //   return adId;
-    // }
+  create(ad: Ad) {
+    return new Promise<Ad>((resolve, reject) => {
+      this.db.run(
+        "INSERT INTO ad (title, description, price, picture, location) VALUES (?, ?, ?, ?, ?)",
+        [ad.title, ad.description, ad.price, ad.picture, ad.location],
+        function (err: any) {
+          if (err) {
+            console.log("error", err);
+            reject(err);
+          } else {
+            resolve({ ...ad, id: `${this.lastID}` });
+          }
+        }
+      );
+    });
   }
+  async update(id: string, ad: Partial<PartialAdWithoutId>) {
+    return new Promise<Ad>(async (resolve, reject) => {
+      const adFound = await this.findAdById(id);
+      Object.keys(ad).forEach((k) => {
+        //title, description, picture, location, price
+        if (ad[k]) {
+          // si title n'est pas undefined :  if ad.title
+          adFound[k] = ad[k]; // title de l'annonce trouvée est égal au titre reçu adFound.title = ad.title
+        }
+      });
+
+      this.db.run(
+        "UPDATE ad SET title = ?, description = ?, picture = ?, location = ?, price = ? WHERE id = ?",
+        [
+          adFound.title,
+          adFound.description,
+          adFound.picture,
+          adFound.location,
+          adFound.price,
+          id,
+        ],
+        function (err) {
+          if (err) {
+            reject("Il y a eu une erreur");
+          }
+          if (this.changes === 0) {
+            reject("L'annonce n'existe pas");
+          }
+
+          resolve(adFound);
+        }
+      );
+    });
+  }
+  delete(id: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        this.db.run("DELETE FROM ads WHERE id = ?", [id], (err) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve(id); // Résoudre avec l'ID de l'annonce supprimée
+            }
+        });
+    });
+ }
 }
-  

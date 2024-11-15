@@ -15,18 +15,18 @@ router.get("/list", async (req, res) => {
   }
 });
 
-router.get("/find/:id", (req, res) => {
+router.get("/find/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const ad = new AdService().findAdById(id);
+    const ad = await new AdService().findAdById(id);
     res.send(ad);
   } catch (err: any) {
     res.status(500).send({ message: err.message });
   }
 });
 
-//express validator
-router.post("/create", (req, res) => {
+//Appeler la route de façon async pour intégrer ma fonction create
+router.post("/create", async (req, res) => {
   const { id, title, description, picture, location, price }: Ad = req.body;
 
   const ad = {
@@ -39,7 +39,7 @@ router.post("/create", (req, res) => {
   };
 
   try {
-    const newAd = new AdService().create(ad);
+    const newAd = await new AdService().create(ad);
     res.status(201).send({ success: true, ad: newAd });
   } catch (err: any) {
     res.status(500).send({ success: false, errorMessage: err.message });
@@ -47,16 +47,21 @@ router.post("/create", (req, res) => {
 });
 
 
-router.patch("/update/:id", (req, res) => {
+router.patch("/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
     // const { title, description, picture, location, price }: Partial<Ad>= req.body;
     const { title, description, picture, location, price }: PartialAdWithoutId = req.body;
 
-    const ad = { title, description, picture, location, price };
+    const ad = { 
+      title: title || '', 
+      description: description || '', 
+      picture: picture || '', 
+      location: location || '', 
+      price: price !== undefined ? price : 0, 
+    };
 
-    const adUpdate = new AdService().update(id, ad);
-
+    const adUpdate = await new AdService().update(id, ad);
     res.send(adUpdate);
   } catch (error) {
     console.error(error);
@@ -64,16 +69,17 @@ router.patch("/update/:id", (req, res) => {
   }
 });
 
-router.delete("/delete/:id", (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const adDelete = new AdService().delete(id);
+    const adDelete = await new AdService().delete(id);
 
     res.send({ message: `L'annonce ${adDelete} as bien été supprimé` });
   } catch (error) {
     console.error(error);
-    res.send({ error: "L'annonce n'as pas pu etre suprrimé" });
+    res.status(500).send({ error: "L'annonce n'as pas pu etre suprrimé" });
   }
 });
+
 export default router;
 
