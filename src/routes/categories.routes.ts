@@ -30,19 +30,19 @@ router.get("/find/:id", async (req, res) => {
   
 // POST /create-express validator
 router.post("/create", async (req, res) => {
-    const {id,title }: Category = req.body;
+  const { id, title }: Category = req.body;
 
-    const category = {
-        id,
-        title,
-    };
+  const category = {
+    id,
+    title,
+  };
 
-    try {
-        const newCategory = await new CategoryService().create(category);
-        res.status(201).send({ success: true, category: newCategory});
-    } catch (err: any) {
-        res.status(500).send({ success: false, errorMessage: err.message });
-    }
+  try {
+    const newCategory = await new CategoryService().create(category);
+    res.status(201).send({ success: true, category: newCategory });
+  } catch (err: any) {
+    res.status(500).send({ success: false, errorMessage: err.message });
+  }
 });
 
 //PATCH /update

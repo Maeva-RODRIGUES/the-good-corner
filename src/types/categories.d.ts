@@ -1,8 +1,8 @@
 //types/categories.d.ts
 
 export type Category = {
-  [key: string]: string | number;
-    id: number;
+  [key: string]: string;
+    id: string;
     title: string;
   };
 
