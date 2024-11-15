@@ -71,6 +71,7 @@ export default class AdService {
       );
     });
   }
+  
   async update(id: string, ad: Partial<PartialAdWithoutId>) {
     return new Promise<Ad>(async (resolve, reject) => {
       const adFound = await this.findAdById(id);

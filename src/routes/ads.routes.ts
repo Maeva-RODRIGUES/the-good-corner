@@ -77,7 +77,7 @@ router.delete("/delete/:id", async (req, res) => {
     res.send({ message: `L'annonce ${adDelete} as bien été supprimé` });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "L'annonce n'as pas pu etre suprrimé" });
+    res.status(500).send({ error: "L'annonce n'a pas pu etre suprrimé" });
   }
 });
 
