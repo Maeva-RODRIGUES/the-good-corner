@@ -1,34 +1,54 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn,ManyToOne  } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
 import CategoryEntity from "./Category.entity";
+import TagEntity from "./Tag.entity";
+
+//repository
 
 @Entity({ name: "ads" })
 export default class AdEntity {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-    @Column()
-    title: string;
+  @Column()
+  title: string;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    @Column()
-    price: number;
+  @Column({ type: "float" }) //ici on spécifie float parce que number de TS peut être compris comme integer par TypeORM
+  price: number;
 
-    @Column({type: "float"})//ici on spécifie float parce que number de TS peut être compris comme integer par TypeORM
-    picture: string;
+  @Column()
+  picture: string;
 
-    @Column()
-    location: string;
+  @Column()
+  location: string;
 
-     //relation avec Category
-    @ManyToOne(() => CategoryEntity, (c) => c.ads)
-    category: CategoryEntity;
+  @ManyToOne(() => CategoryEntity, (c) => c.ads, { onDelete: "CASCADE" })
+  category: CategoryEntity;
 
-    @CreateDateColumn()
-    created_at: Date;
+  @ManyToMany(() => TagEntity)
+  @JoinTable({
+    name: "ads_tags",
+    joinColumn: { name: "ad_id" },
+    inverseJoinColumn: { name: "tag_id" },
+  })
+  tags: TagEntity[];
 
-    @UpdateDateColumn()
-    updated_at: Date;
+  @CreateDateColumn()
+  created_at: Date;
 
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  //il nous manque la relation avec Category (que je n'ai pas encore)
 }

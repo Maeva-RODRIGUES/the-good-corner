@@ -1,8 +1,7 @@
 //src/routes/ads.routes.ts
-
 import { Router } from "express";
-import AdService from "../services/ad.service";
-import { Ad, PartialAdWithoutId} from "../types/ads";
+import AdService  from "../services/ad.service";;
+import AdEntity from "../entities/Ad.entity";
 
 const router = Router();
 
@@ -25,47 +24,59 @@ router.get("/find/:id", async (req, res) => {
   }
 });
 
-//Appeler la route de façon async pour intégrer ma fonction create
+//express validator
 router.post("/create", async (req, res) => {
-  const { id, title, description, picture, location, price }: Ad = req.body;
-
-  const ad = {
-    id,
+  const {
     title,
     description,
     picture,
     location,
     price,
+    category,
+    tagsIds,
+  }: Omit<AdEntity, "id" | "created_at" | "updated_at" | "tags"> & {
+    tagsIds: string[];
+  } = req.body;
+
+  const ad = {
+    title,
+    description,
+    picture,
+    location,
+    price,
+    category,
+    tagsIds: tagsIds ?? [],
   };
 
   try {
     const newAd = await new AdService().create(ad);
+    console.log("newAd", newAd);
     res.status(201).send({ success: true, ad: newAd });
   } catch (err: any) {
     res.status(500).send({ success: false, errorMessage: err.message });
   }
 });
 
-
 router.patch("/update/:id", async (req, res) => {
+  const { id } = req.params;
+  // const { title, description, picture, location, price }: Partial<Ad>= req.body;
+  const {
+    title,
+    description,
+    picture,
+    location,
+    price,
+    tagsIds
+  }: Partial<Omit<AdEntity, "id" | "tags">  & {
+    tagsIds: string[];
+  }> = req.body;
+
+  const ad = { title, description, picture, location, price, tagsIds };
   try {
-    const { id } = req.params;
-    // const { title, description, picture, location, price }: Partial<Ad>= req.body;
-    const { title, description, picture, location, price }: PartialAdWithoutId = req.body;
-
-    const ad = { 
-      title: title || '', 
-      description: description || '', 
-      picture: picture || '', 
-      location: location || '', 
-      price: price !== undefined ? price : 0, 
-    };
-
     const adUpdate = await new AdService().update(id, ad);
     res.send(adUpdate);
-  } catch (error) {
-    console.error(error);
-    res.send({ error: "L'article n'as pas été trouvé" });
+  } catch (err: any) {
+    res.status(500).send({ success: false, errorMessage: err.message ?? err }); // opérateur de coalescence ?? ||
   }
 });
 
@@ -74,12 +85,9 @@ router.delete("/delete/:id", async (req, res) => {
     const { id } = req.params;
     const adDelete = await new AdService().delete(id);
 
-    res.send({ message: `L'annonce ${adDelete} as bien été supprimé` });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: "L'annonce n'a pas pu etre suprrimé" });
+    res.send({ message: `L'annonce ${adDelete} a bien était supprimée` });
+  } catch (error: any) {
+    res.send({ error: "L'annonce n'a pas pu etre supprimée :" + error });
   }
 });
-
 export default router;
-
