@@ -1,27 +1,21 @@
 // Cards.tsx
 
-// Définition des types pour les props que le composant Cards attend
-interface CardProps {
-  title: string;
-  description: string;
-  created_at: string;
-  price: string;
-}
+import { ProductType } from "./ListAds";
+import { Link } from "react-router-dom";
 
-// Extraire directement les props dans la déstructuration 👇
-function Card({ title, description, created_at, price }: CardProps) {
+function Card(props: { data: ProductType }) {
   return (
-    <div style={{ border: '1px solid #fff', padding: '10px', backgroundColor: '#654321', color: 'white', width: '150px' }}>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span>{created_at}</span>
-        <span>{price}</span>
+    <>
+      <div className="card">
+        <h1>{props.data.title}</h1>
+        <p>{props.data.description}</p>
+        <p>{props.data.created_at}</p>
+        <p>{props.data.price} €</p>
+        <Link to={`/ads/${props.data.id}`}>Voir le produit</Link>
       </div>
-    </div>
+    </>
   );
 }
 
 export default Card;
-
 
