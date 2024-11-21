@@ -102,3 +102,109 @@ export default function ToDoList() {
     </div>
   );
 }
+
+// autre façon 
+
+// import {  useState } from "react";
+
+// type ListItemType = {
+//   id: string;
+//   title: string;
+// };
+
+// export default function ToDoList() {
+//   const [list, setList] = useState<ListItemType[]>([]);
+//   const [title, setTitle] = useState<string>("");
+  
+//   const [modeEdition, setModeEdition] = useState({
+//     editing: false,
+//     elementId: "",
+//   });
+
+//   const handleToDo = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setTitle(e.target.value);
+//   };
+
+//   const handleAddToList = () => {
+//     setList([...list, { id: String(Math.random()), title }]); //asynchronicité
+//     setTitle("");
+//   };
+
+//   const deleteFromList = (index: number) => {
+//     setList((prevValues) => prevValues.filter((_, i) => i !== index));
+//   };
+
+//   const handleEditElement = () => {
+//     const elementIdEdited = modeEdition.elementId;
+//     if (elementIdEdited) {
+//       const newList = list.map((e) => {
+//         return e.id === elementIdEdited ? Object.assign({}, e, { title }) : e;
+//       });
+//       setList(newList);
+//       setModeEdition({ editing: false, elementId: "" });
+//       setTitle("");
+//     }
+//     //faire l'édition ici
+//   };
+
+//   const editFromList = (index: number) => {
+//     const element = list.find((_, i) => i === index);
+//     if (element) {
+//       setModeEdition((modeEdition) => {
+//         const newEditing = !modeEdition.editing;
+//         setTitle(newEditing ? element.title : "");
+//         return {
+//           editing: newEditing,
+//           elementId: modeEdition.editing ? "" : element.id,
+//         };
+//       });
+//       // setTitle(modeEdition.editing ? element.title : ""); //! a montrer
+//     }
+//   };
+//   return (
+//     <div>
+//       <input
+//         placeholder={
+//           modeEdition.editing ? "Edition d'une tâche" : "Ajouter une tache"
+//         }
+//         type="text"
+//         onChange={handleToDo}
+//         value={title}
+//       />
+//       {/* <button children={"Ajouter"} /> */}
+//       <button
+//         onClick={() =>
+//           modeEdition.editing ? handleEditElement() : handleAddToList()
+//         }
+//       >
+//         {modeEdition.editing ? "Éditer" : "Ajouter"}
+//       </button>
+//       {list.length === 0 ? (
+//         <p>La liste est vide</p>
+//       ) : (
+//         <ul>
+//           {list.map((todo, index) => (
+//             <li key={todo.id}>
+//               {todo.title}
+//               <button
+//                 onClick={() => deleteFromList(index)}
+//                 disabled={modeEdition.editing}
+//               >
+//                 Supprimer
+//               </button>
+//               <button
+//                 onClick={() => editFromList(index)}
+//                 disabled={
+//                   modeEdition.elementId !== todo.id && modeEdition.editing
+//                 }
+//               >
+//                 {modeEdition.elementId === todo.id ? "Annuler" : "Éditer"}
+//               </button>
+//             </li>
+//           ))}
+//         </ul>
+//       )}
+//     </div>
+//   );
+// }
+
