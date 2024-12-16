@@ -1,18 +1,16 @@
-//types/categories.d.ts
+import type CategoryEntity from "../entities/Category.entity";
 
-// export type Category = {
-//   [key: string]: string;
-//     id: string;
-//     title: string;
-//   };
+export type CategoryCreateType = Omit<
+  CategoryEntity,
+  "id" | "created_at" | "updated_at" | "ads"
+>;
+export type CategoryUpdateType = Omit<
+  CategoryEntity,
+  "id" | "created_at" | "updated_at" | "ads"
+>;
 
-//   export type CategoryWithoutId<T extends object> = T & {
-//     [key: string]: string | number;
-//     title?: string;
-//   };
-// export type CategoryCreate<T extends object> = T & {
-//   [key: string]: string;
-//   title: string;
-// };
-
-// export type PartialCategoryWithoutId = CategoryWithoutId<Partial<Omit<Category, "id">>>;
+export type CategoryFindWithParams = {
+  id: string;
+  limit?: string;
+};
+// export type CategoryUpdateType = Omit<CategoryEntity, "id">;

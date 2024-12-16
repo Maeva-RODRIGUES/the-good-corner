@@ -1,6 +1,6 @@
-import { Repository } from "typeorm";
-import datasource from "../lib/datasource";
-import TagEntity from "../entities/Tag.entity";
+import datasource from '../lib/datasource';
+import TagEntity from '../entities/Tag.entity';
+import { Repository } from 'typeorm';
 
 export default class TagRepository extends Repository<TagEntity> {
   constructor() {

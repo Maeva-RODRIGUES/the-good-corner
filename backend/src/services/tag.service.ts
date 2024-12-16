@@ -1,6 +1,6 @@
-import TagRepository from "../repositories/Tag.repository";
-import TagEntity from "../entities/Tag.entity";
-import { In } from "typeorm";
+import TagRepository from '../repositories/Tag.repository';
+import { In } from 'typeorm';
+import { TagCreateType, TagUpdateType } from '../types/tags';
 
 export default class TagService {
   db: TagRepository;
@@ -29,12 +29,12 @@ export default class TagService {
     return tag;
   }
 
-  async create(tag: Omit<TagEntity, "id" | "created_at" | "updated_at">) {
+  async create(tag: TagCreateType) {
     const newTag = await this.db.save(tag);
     return newTag;
   }
 
-  async update(id: string, tag: Partial<Omit<TagEntity, "id">>) {
+  async update(id: string, tag: Partial<TagUpdateType>) {
     const tagFound = await this.findTagById(id);
     const tagUpdate = this.db.merge(tagFound, tag);
 

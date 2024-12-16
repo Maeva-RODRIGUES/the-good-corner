@@ -1,11 +1,48 @@
-//frontend/src/components/NavBar.tsx
+import { Link, NavLink } from "react-router-dom";
+import logo from "@/assets/store.png";
+import routesLink from "@/lib/routes";
+
+const classInfo = {
+  active: "text-indigo-600 underline font-bold",
+  inactive: "text-slate-600",
+};
 
 function NavBar() {
-  return(
-      <div>
-         👉Voici la NavBar
-      </div>
-  )
+  return (
+    <>
+      <nav className="bg-white border-gray-200 dark:bg-gray-900 w-full">
+        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+          <Link
+            to="/"
+            className="flex items-center space-x-3 rtl:space-x-reverse"
+          >
+            <img src={logo} className="h-8" alt="Flowbite Logo" />
+            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+              The Good Corner
+            </span>
+          </Link>
+
+          <div className="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+              {routesLink.map((r) => (
+                <NavLink
+                  to={r.to}
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? classInfo.active : classInfo.inactive
+                    } block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`
+                  }
+                >
+                  {r.title}
+                </NavLink>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div className="flex gap-5"></div>
+    </>
+  );
 }
 
 export default NavBar;

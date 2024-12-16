@@ -1,5 +1,3 @@
-//src/lib/datasource.ts
-
 import { DataSource } from "typeorm";
 import AdEntity from "../entities/Ad.entity";
 import CategoryEntity from "../entities/Category.entity";
@@ -11,5 +9,6 @@ export default new DataSource({
   // entities: ["/src/entities/*.entities.ts"],
   entities: [AdEntity, CategoryEntity, TagEntity],
   synchronize: true, // pas à utiliser en prod (faire des migrations pour la prod);
-  logging: ["error", "query"], // nous permettra de voir les requêtes SQL qui sont jouées dans le terminal
+  logging: false, // nous permettra de voir les requêtes SQL qui sont jouées dans le terminal
+  // logging: ["error", "query"], // nous permettra de voir les requêtes SQL qui sont jouées dans le terminal
 });

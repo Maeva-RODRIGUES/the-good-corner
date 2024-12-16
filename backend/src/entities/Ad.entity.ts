@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import CategoryEntity from "./Category.entity";
 import TagEntity from "./Tag.entity";
+import { Length } from "class-validator";
 
 //repository
 
@@ -18,6 +19,7 @@ export default class AdEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Length(5)
   @Column()
   title: string;
 
@@ -33,7 +35,10 @@ export default class AdEntity {
   @Column()
   location: string;
 
-  @ManyToOne(() => CategoryEntity, (c) => c.ads, { onDelete: "CASCADE" })
+  @ManyToOne(() => CategoryEntity, (c) => c.ads, {
+    onDelete: "CASCADE",
+    nullable: false,
+  })
   category: CategoryEntity;
 
   @ManyToMany(() => TagEntity)
@@ -49,6 +54,4 @@ export default class AdEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
-
-  //il nous manque la relation avec Category (que je n'ai pas encore)
 }

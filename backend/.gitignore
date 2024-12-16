@@ -1,4 +1,5 @@
 node_modules
-
-the-good-corner.db
-
+package-lock.json
+dist
+build
+graph-panel-0.0.4.vsix

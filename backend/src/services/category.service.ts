@@ -1,7 +1,10 @@
-//services/category.service.ts
-
-import CategoryRepository from "../repositories/Category.Repository";
-import CategoryEntity from "../entities/Category.entity";
+import CategoryEntity from '../entities/Category.entity';
+import CategoryRepository from '../repositories/Category.repository';
+import {
+  CategoryCreateType,
+  CategoryFindWithParams,
+  CategoryUpdateType,
+} from "../types/categories";
 
 export default class CategoryService {
   db: CategoryRepository;
@@ -14,17 +17,13 @@ export default class CategoryService {
     return await this.db.find();
   }
 
-  /**-----------------------
-   *     Petit exemple de l'utilisation de la méthode personnalisée du Repository
-   *  
-   *  
-   *------------------------**/
-  async findCategoryById(id: string, limit?: string) {
+  async findCategoryById({ id, limit }: CategoryFindWithParams) {
     let category: CategoryEntity | null;
-    if (limit) { // si limit est indiquée, on va chercher la méthode personnalisé dans notre repository
-      category = await this.db.findCategoryByIdWithLimitAds(id, limit);
+    if (limit) {
+      // si limit est indiquée, on va chercher la méthode personnalisé dans notre repository
+      category = await this.db.findCategoryByIdWithLimitAds({ id, limit });
     } else {
-      category = await this.db.findOne({ where: { id } });
+      category = await this.db.findOne({ where: { id }, relations: ["ads"] });
     }
     // const category = await this.db.findOne({ where: { id } });
     if (!category) {
@@ -33,14 +32,12 @@ export default class CategoryService {
     return category;
   }
 
-  async create(
-    category: Omit<CategoryEntity, "id" | "created_at" | "updated_at" | "ads">
-  ) {
+  async create(category: CategoryCreateType) {
     const newCategory = await this.db.save(category);
     return newCategory;
   }
-  async update(id: string, category: Partial<Omit<CategoryEntity, "id">>) {
-    const categoryFound = await this.findCategoryById(id);
+  async update(id: string, category: Partial<CategoryUpdateType>) {
+    const categoryFound = await this.findCategoryById({ id });
     const categoryUpdate = this.db.merge(categoryFound, category);
 
     return await this.db.save(categoryUpdate);

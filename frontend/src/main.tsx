@@ -1,14 +1,13 @@
-//main.tsx
-
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App.tsx";
+import AdDetails from "./components/Ads/AdDetails.tsx";
 import Home from "./components/Home.tsx";
-// import AdDetails from "./components/AdDetails.tsx";
-import ToDoList from "./components/Exos/TodoList.tsx";
+import NewAd from "./components/Ads/NewAd.tsx";
+import EditAd from "./components/Ads/EditAd.tsx";
+import AdsFromCategory from "./components/Categories/AdsFromCategory.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,19 +17,14 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-      // { path: "/ads/:id", element: <AdDetails /> 
-
-      // },
-      { path: "/exercice1", element: <ToDoList /> 
-
-      },
+      { path: "/ads/view/:id", element: <AdDetails /> },
+      { path: "/ads/edit/:id", element: <EditAd /> },
+      { path: "/ads/create", element: <NewAd /> },
+      { path: "/categories/:id", element: <AdsFromCategory /> },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    {/* <App /> */}
-    <RouterProvider router={router} />
-  </StrictMode>
+  <RouterProvider router={router} />
 );
