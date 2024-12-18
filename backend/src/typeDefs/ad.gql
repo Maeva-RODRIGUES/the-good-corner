@@ -1,0 +1,55 @@
+####### Types
+type Ad {
+  id: ID
+  title: String
+  description: String
+  price: Float
+  picture: String
+  location: String
+  category: Category
+  tags: [Tag]
+  created_at: String
+  updated_at: String
+}
+
+type Query {
+  ads(filter: FilterType): [Ad]
+  findAd(id: ID!): Ad
+}
+
+type Mutation {
+  createAd(data: CreateAdInput!): Ad
+  updateAd(data: UpdateAdInput!): Ad
+  deleteAd(id: ID!): String
+}
+
+####### Inputs
+input FilterType {
+  limit: Int
+  order: FindOptionOrderValue #prévoir un enum
+}
+
+input CreateAdInput {
+  title: String!
+  description: String
+  location: String
+  price: Float!
+  categoryId: String!
+  tagsIds: [String!]
+}
+
+input UpdateAdInput {
+  id: ID!
+  title: String
+  description: String
+  location: String
+  price: Float
+  categoryId: String
+  tagsIds: [String!]
+}
+
+####### Enum
+enum FindOptionOrderValue {
+  ASC
+  DESC
+}

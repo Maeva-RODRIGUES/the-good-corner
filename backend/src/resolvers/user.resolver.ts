@@ -35,7 +35,8 @@ const users: UsersTS[] = [];
 
 const fetchUsers = async () => {
     const result = await axios.get<UsersTS[]>("https://jsonplaceholder.typicode.com/users");
-    console.log("RESULT", result.data);
+    // console.log("RESULT", result.data);
+    console.dir(result.data, { depth: null }); //permet d'afficher un objet plus détaillé, en contrôlant la profondeur.
     users.push(...result.data);
 };
 
@@ -47,5 +48,13 @@ export default {
             console.log("HOLA");
             return users;
         },
-    },
+        findUserById: async (parent: any, {id}: {id: string}) => {
+            const result = await axios.get<UsersTS>(`https://jsonplaceholder.typicode.com/users/${id}`
+
+            );
+    
+           return result.data
+    
+     },
+  },
 };

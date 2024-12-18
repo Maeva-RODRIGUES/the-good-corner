@@ -1,0 +1,30 @@
+type Tag {
+    id: ID
+    label: String
+    created_at: String
+    updated_at: String
+}
+
+# type ResultTagList {
+#     result: [Tag]
+#     success: Boolean
+# }
+type Query {
+    tags: [Tag]
+    findTag(id: ID!): Tag
+}
+
+type Mutation {
+    createTag(data: CreateTagInput!): Tag
+    updateTag(data: UpdateTagInput!): Tag
+    deleteTag(id: ID!): String
+}
+
+input CreateTagInput {
+    label: String!
+}
+
+input UpdateTagInput {
+    label: String!
+    id: ID!
+}

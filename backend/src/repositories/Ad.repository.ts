@@ -1,5 +1,5 @@
 import AdEntity from '../entities/Ad.entity';
-import datasource from '../lib/datasource';
+import datasource from '../repositories/lib/datasource';
 import { Repository } from 'typeorm';
 
 export default class AdRepository extends Repository<AdEntity> {

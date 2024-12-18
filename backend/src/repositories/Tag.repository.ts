@@ -1,4 +1,4 @@
-import datasource from '../lib/datasource';
+import datasource from './lib/datasource';
 import TagEntity from '../entities/Tag.entity';
 import { Repository } from 'typeorm';
 

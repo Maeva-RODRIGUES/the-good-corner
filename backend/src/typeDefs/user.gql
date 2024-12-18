@@ -31,7 +31,7 @@ type User {
 
 type Query {
   users: [User]         
-  findUser(id: ID): User
+  findUserById(id: ID): User
 }
 
 type Mutation {

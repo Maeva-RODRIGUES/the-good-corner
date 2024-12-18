@@ -1,6 +1,6 @@
 import AdRepository from './Ad.repository';
 import CategoryEntity from '../entities/Category.entity';
-import datasource from '../lib/datasource';
+import datasource from './lib/datasource';
 import { CategoryFindWithParams } from '../types/categories';
 import { Repository } from 'typeorm';
 

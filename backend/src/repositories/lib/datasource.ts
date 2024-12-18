@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
-import AdEntity from "../entities/Ad.entity";
-import CategoryEntity from "../entities/Category.entity";
-import TagEntity from "../entities/Tag.entity";
+import AdEntity from "../../entities/Ad.entity";
+import CategoryEntity from "../../entities/Category.entity";
+import TagEntity from "../../entities/Tag.entity";
 
 export default new DataSource({
   type: "sqlite",
