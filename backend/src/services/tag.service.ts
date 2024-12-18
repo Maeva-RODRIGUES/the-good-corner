@@ -1,6 +1,5 @@
 import TagRepository from '../repositories/Tag.repository';
 import { In } from 'typeorm';
-import { TagCreateType, TagUpdateType } from '../types/tags';
 import { MutationCreateTagArgs, MutationUpdateTagArgs } from '@/generated/graphql';
 
 export default class TagService {

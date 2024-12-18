@@ -1,16 +1,16 @@
 import { CategoryType } from "@/types/categories";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { categoriesList } from "@/requests/categories.requests";
+// import { categoriesList } from "@/requests/categories.requests";
 
 function CategoriesButtons() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const getCategories = async () => {
     try {
-      const data = await categoriesList();
-      if (data.success) {
-        setCategories(data.result);
-      }
+      // const data = await categoriesList();
+      // if (data.success) {
+      //   setCategories(data.result);
+      // }
     } catch (err: any) {
       console.log({ err });
     }

@@ -3,7 +3,6 @@ import CategoryEntity from "../entities/Category.entity";
 import CategoryService from "./category.service";
 import TagEntity from "../entities/Tag.entity";
 import TagService from "./tag.service";
-//import { AdCreateType, AdUpdateType, FilterType } from "../types/ads";
 import { validate } from "class-validator";
 import {
   MutationCreateAdArgs,

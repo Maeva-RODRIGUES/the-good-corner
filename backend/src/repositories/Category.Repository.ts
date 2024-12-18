@@ -1,8 +1,8 @@
 import AdRepository from './Ad.repository';
 import CategoryEntity from '../entities/Category.entity';
-import datasource from './lib/datasource';
-import { CategoryFindWithParams } from '../types/categories';
+import datasource from '../repositories/lib/datasource';
 import { Repository } from 'typeorm';
+import { QueryFindCategoryArgs } from '@/generated/graphql';
 
 export default class CategoryRepository extends Repository<CategoryEntity> {
   constructor() {
@@ -13,7 +13,7 @@ export default class CategoryRepository extends Repository<CategoryEntity> {
    *?    On pourra rajouter de nouvelles fonctions à notre catalogue de requêtes
    *========================**/
 
-  async findCategoryByIdWithLimitAds({ id, limit }: CategoryFindWithParams) {
+  async findCategoryByIdWithLimitAds({ id, limit }: QueryFindCategoryArgs["data"]) {
     const adsRepository = new AdRepository();
     const category = await this.findOne({
       where: { id },

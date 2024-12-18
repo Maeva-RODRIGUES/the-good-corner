@@ -4,7 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node-dev --watch ./src ./src/index.ts",
-    "codegen" : "graphql-codegen --config codegen.ts",
+    "codegen": "graphql-codegen --config codegen.ts --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
+    "@apollo/client": "^3.12.3",
     "@apollo/server": "^4.11.2",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.14",

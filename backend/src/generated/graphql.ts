@@ -23,7 +23,7 @@ export type Ad = {
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   location?: Maybe<Scalars['String']['output']>;
-  picture?: Maybe<Scalars['String']['output']>;
+  picture: Scalars['String']['output'];
   price?: Maybe<Scalars['Float']['output']>;
   tags?: Maybe<Array<Maybe<Tag>>>;
   title?: Maybe<Scalars['String']['output']>;
@@ -76,6 +76,10 @@ export type CreateAdInput = {
   title: Scalars['String']['input'];
 };
 
+export type CreateCategoryInput = {
+  title: Scalars['String']['input'];
+};
+
 export type CreateTagInput = {
   label: Scalars['String']['input'];
 };
@@ -83,6 +87,11 @@ export type CreateTagInput = {
 export type FilterType = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<FindOptionOrderValue>;
+};
+
+export type FindCategoryInput = {
+  id: Scalars['ID']['input'];
+  limit?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum FindOptionOrderValue {
@@ -100,11 +109,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   addBook?: Maybe<Book>;
   createAd?: Maybe<Ad>;
+  createCategory?: Maybe<Category>;
   createTag?: Maybe<Tag>;
   deleteAd?: Maybe<Scalars['String']['output']>;
   deleteBook?: Maybe<Array<Maybe<Book>>>;
+  deleteCategory?: Maybe<Scalars['String']['output']>;
   deleteTag?: Maybe<Scalars['String']['output']>;
   updateAd?: Maybe<Ad>;
+  updateCategory?: Maybe<Category>;
   updateTag?: Maybe<Tag>;
 };
 
@@ -116,6 +128,11 @@ export type MutationAddBookArgs = {
 
 export type MutationCreateAdArgs = {
   data: CreateAdInput;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  data: CreateCategoryInput;
 };
 
 
@@ -134,6 +151,11 @@ export type MutationDeleteBookArgs = {
 };
 
 
+export type MutationDeleteCategoryArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteTagArgs = {
   id: Scalars['ID']['input'];
 };
@@ -141,6 +163,11 @@ export type MutationDeleteTagArgs = {
 
 export type MutationUpdateAdArgs = {
   data: UpdateAdInput;
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  data: UpdateCategoryInput;
 };
 
 
@@ -152,8 +179,10 @@ export type Query = {
   __typename?: 'Query';
   ads?: Maybe<Array<Maybe<Ad>>>;
   books?: Maybe<Array<Maybe<Book>>>;
+  categories?: Maybe<Array<Maybe<Category>>>;
   findAd?: Maybe<Ad>;
   findBook?: Maybe<Book>;
+  findCategory?: Maybe<Category>;
   findTag?: Maybe<Tag>;
   findUserById?: Maybe<User>;
   tags?: Maybe<Array<Maybe<Tag>>>;
@@ -173,6 +202,11 @@ export type QueryFindAdArgs = {
 
 export type QueryFindBookArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryFindCategoryArgs = {
+  data: FindCategoryInput;
 };
 
 
@@ -201,6 +235,11 @@ export type UpdateAdInput = {
   price?: InputMaybe<Scalars['Float']['input']>;
   tagsIds?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateCategoryInput = {
+  id: Scalars['ID']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type UpdateTagInput = {
@@ -299,8 +338,10 @@ export type ResolversTypes = {
   Category: ResolverTypeWrapper<Category>;
   Company: ResolverTypeWrapper<Company>;
   CreateAdInput: CreateAdInput;
+  CreateCategoryInput: CreateCategoryInput;
   CreateTagInput: CreateTagInput;
   FilterType: FilterType;
+  FindCategoryInput: FindCategoryInput;
   FindOptionOrderValue: FindOptionOrderValue;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Geo: ResolverTypeWrapper<Geo>;
@@ -311,6 +352,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Tag: ResolverTypeWrapper<Tag>;
   UpdateAdInput: UpdateAdInput;
+  UpdateCategoryInput: UpdateCategoryInput;
   UpdateTagInput: UpdateTagInput;
   User: ResolverTypeWrapper<User>;
 };
@@ -325,8 +367,10 @@ export type ResolversParentTypes = {
   Category: Category;
   Company: Company;
   CreateAdInput: CreateAdInput;
+  CreateCategoryInput: CreateCategoryInput;
   CreateTagInput: CreateTagInput;
   FilterType: FilterType;
+  FindCategoryInput: FindCategoryInput;
   Float: Scalars['Float']['output'];
   Geo: Geo;
   ID: Scalars['ID']['output'];
@@ -336,6 +380,7 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
   Tag: Tag;
   UpdateAdInput: UpdateAdInput;
+  UpdateCategoryInput: UpdateCategoryInput;
   UpdateTagInput: UpdateTagInput;
   User: User;
 };
@@ -346,7 +391,7 @@ export type AdResolvers<ContextType = any, ParentType extends ResolversParentTyp
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  picture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  picture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -395,19 +440,24 @@ export type GeoResolvers<ContextType = any, ParentType extends ResolversParentTy
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addBook?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<MutationAddBookArgs, 'data'>>;
   createAd?: Resolver<Maybe<ResolversTypes['Ad']>, ParentType, ContextType, RequireFields<MutationCreateAdArgs, 'data'>>;
+  createCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'data'>>;
   createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'data'>>;
   deleteAd?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteAdArgs, 'id'>>;
   deleteBook?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType, Partial<MutationDeleteBookArgs>>;
+  deleteCategory?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteCategoryArgs, 'id'>>;
   deleteTag?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'id'>>;
   updateAd?: Resolver<Maybe<ResolversTypes['Ad']>, ParentType, ContextType, RequireFields<MutationUpdateAdArgs, 'data'>>;
+  updateCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'data'>>;
   updateTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'data'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   ads?: Resolver<Maybe<Array<Maybe<ResolversTypes['Ad']>>>, ParentType, ContextType, Partial<QueryAdsArgs>>;
   books?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType>;
+  categories?: Resolver<Maybe<Array<Maybe<ResolversTypes['Category']>>>, ParentType, ContextType>;
   findAd?: Resolver<Maybe<ResolversTypes['Ad']>, ParentType, ContextType, RequireFields<QueryFindAdArgs, 'id'>>;
   findBook?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, Partial<QueryFindBookArgs>>;
+  findCategory?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<QueryFindCategoryArgs, 'data'>>;
   findTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryFindTagArgs, 'id'>>;
   findUserById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryFindUserByIdArgs>>;
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>;
@@ -446,3 +496,4 @@ export type Resolvers<ContextType = any> = {
   Tag?: TagResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
+

@@ -6,7 +6,6 @@ import {
   QueryFindTagArgs,
 } from "@/generated/graphql";
 import TagService from "@/services/tag.service";
-import { TagCreateType } from "@/types/tags";
 
 export default {
   Query: {
@@ -25,6 +24,7 @@ export default {
       { data }: MutationCreateTagArgs
     ): Promise<TagEntity> => {
       const newTag = await new TagService().create(data);
+       
       return newTag;
     },
     updateTag: async (
@@ -39,7 +39,7 @@ export default {
     deleteTag: async (_: any, { id }: MutationDeleteTagArgs): Promise<string> => {
       const tagDelete = await new TagService().delete(id);
 
-      return `Le tag ${tagDelete} a bien était supprimé`;
+      return `Le tag ${tagDelete} a bien été supprimé`;
     },
   },
 };

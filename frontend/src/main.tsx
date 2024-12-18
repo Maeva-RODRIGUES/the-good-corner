@@ -9,6 +9,14 @@ import NewAd from "./components/Ads/NewAd.tsx";
 import EditAd from "./components/Ads/EditAd.tsx";
 import AdsFromCategory from "./components/Categories/AdsFromCategory.tsx";
 
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  uri: "http://localhost:4000",
+});
+
+
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -26,5 +34,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />
+  <ApolloProvider client={client}>
+    <RouterProvider router={router} />
+  </ApolloProvider>
 );

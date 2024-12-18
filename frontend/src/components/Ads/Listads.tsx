@@ -1,7 +1,7 @@
 import Cardad from "@/components/Ads/Cardad";
 import { ProductType } from "@/types/ads";
 import { useEffect, useState } from "react";
-import { getLastAds } from "@/requests/categories.requests";
+// import { getLastAds } from "@/requests/categories.requests";
 
 function Listads() {
   const [dataProduct, setDataProduct] = useState<ProductType[]>([]); //? setDataProduct devra être utilisé pour mettre à jour l'état, autrement dit dataProduct
@@ -9,11 +9,11 @@ function Listads() {
 
   const getAds = async () => {
     try {
-      const data = await getLastAds();
-      if (data.success) {
-        setDataProduct(data.result);
-        setIsloading(false);
-      }
+      // const data = await getLastAds();
+      // if (data.success) {
+      //   setDataProduct(data.result);
+      //   setIsloading(false);
+      // }
     } catch (err: unknown) {
       console.log(err);
     }
