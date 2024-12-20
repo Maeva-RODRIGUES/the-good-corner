@@ -1,15 +1,19 @@
 type Category {
-  id: ID
-  title: String
-  ads: [Ad]
+  id: ID!
+  title: String!
+  ads: [Ad!]
   created_at: String
   updated_at: String
 }
 
+type FindCategory {
+  ads: [AdCategory!]
+}
+
 
 type Query {
-  categories: [Category]
-  findCategory(data: FindCategoryInput!): Category
+  categories: [Category!]
+  findCategory(data: FindCategoryInput!): FindCategory
   # findCategory(id: ID!, limit: String): Category
 }
 type Mutation {

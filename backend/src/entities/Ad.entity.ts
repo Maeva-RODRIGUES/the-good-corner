@@ -23,8 +23,8 @@ export default class AdEntity {
   @Column()
   title: string;
 
-  @Column()
-  description: string;
+  @Column({nullable: true})
+  description?: string;
 
   @Column({ type: "float" }) //ici on spécifie float parce que number de TS peut être compris comme integer par TypeORM
   price: number;

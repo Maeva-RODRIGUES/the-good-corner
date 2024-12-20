@@ -21,7 +21,7 @@ export default class AdService {
     return await this.db.find({
       relations: ["category", "tags"],
       order: { created_at: options?.order ?? "ASC" },
-      take: options?.limit,
+      take: options?.limit || undefined,
     });
   }
 

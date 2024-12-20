@@ -1,7 +1,7 @@
 type Tag {
-    id: ID
-    label: String
-    created_at: String
+    id: ID!
+    label: String!
+    created_at: DateTime
     updated_at: String
 }
 
@@ -10,8 +10,8 @@ type Tag {
 #     success: Boolean
 # }
 type Query {
-    tags: [Tag]
-    findTag(id: ID!): Tag
+    tags: [Tag!]
+    findTag(id: UUID!): Tag
 }
 
 type Mutation {

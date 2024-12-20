@@ -1,7 +1,10 @@
 import defaultPicture from "@/assets/picture.png";
 import { Link } from "react-router-dom";
 import { ProductType } from "@/types/ads";
-function Cardad(props: { data: ProductType }) {
+import { Ad } from "@/generated/graphql";
+
+// function Cardad(props: { data: Ad}) {
+function Cardad(props: { data: Omit<Ad, "category" | "tags" | "updated_at"> }) {
   return (
     <>
       <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">

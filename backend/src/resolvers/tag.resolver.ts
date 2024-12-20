@@ -39,7 +39,7 @@ export default {
     deleteTag: async (_: any, { id }: MutationDeleteTagArgs): Promise<string> => {
       const tagDelete = await new TagService().delete(id);
 
-      return `Le tag ${tagDelete} a bien été supprimé`;
+      return `Le tag ${tagDelete} a bien était supprimé`;
     },
   },
 };

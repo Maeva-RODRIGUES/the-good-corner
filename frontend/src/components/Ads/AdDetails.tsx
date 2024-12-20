@@ -1,36 +1,66 @@
+import { FIND_AD_BY_ID } from "@/requetes/ads.requests";
 import AdContent from "./AdContent";
-import { ProductType } from "@/types/ads";
-import { useEffect, useState } from "react";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
-import { findAd } from "@/requests/ads.requests";
+import {
+  FindAdQuery,
+  FindAdQueryVariables,
+  useFindAdLazyQuery,
+  // useFindAdQuery,
+} from "@/generated/graphql";
+import { useEffect } from "react";
 
 function AdDetails() {
   const params = useParams();
-  const [product, setProduct] = useState<ProductType>();
-  const [isloading, setIsloading] = useState<boolean>(true);
-  const [error, setError] = useState("");
 
-  const getAd = async () => {
-    try {
-      const data = await findAd(params.id!);
-      if (data.success) {
-        setProduct(data.result);
-      }
-    } catch (err: any) {
-      setError(err.response.data.message);
-    }
-    setIsloading(false);
-  };
+  const { data, error, loading, refetch } = useQuery<
+    FindAdQuery,
+    FindAdQueryVariables
+  >(FIND_AD_BY_ID, {
+    variables: {
+      findAdId: params.id!,
+    },
+    skip: params.id === undefined,
+  });
+  // const { data, error, loading, refetch } = useFindAdQuery({
+  //   variables: { findAdId: params.id! },
+  //   skip: params.id === undefined,
+  // });
+
+  /**======================
+   *    Exemple d'un useLazyQuery
+   *========================**/
+  // const [findAdById, { data, error, loading }] = useLazyQuery<
+  //   FindAdQuery,
+  //   FindAdQueryVariables
+  // >(FIND_AD_BY_ID);
+  // // const [findAdById, {data, error, loading}] = useFindAdLazyQuery();
+
+  // console.log("%c⧭", "color: #364cd9", error);
+  // console.log("%c⧭", "color: #33cc99", data);
 
   useEffect(() => {
-    getAd();
-  }, []);
+    refetch({ findAdId: params.id });
+  }, [params.id]);
 
-  if (isloading) {
+  if (loading) {
     return <div>Chargement en cours</div>;
   }
 
-  return <div>{product && <AdContent product={product} error={error} />}</div>;
+  // lorsque params.id changera, on rejouera la requête mais avec de nouvelles variables (donc le nouvel id);
+
+  return (
+    <div>
+      {/* <button
+        onClick={() => findAdById({ variables: { findAdId: params.id } })}
+      >
+        Va récupérer l'annonce
+      </button> */}
+      {data?.findAd && (
+        <AdContent product={data.findAd} error={error?.message} />
+      )}
+    </div>
+  );
 }
 
 export default AdDetails;

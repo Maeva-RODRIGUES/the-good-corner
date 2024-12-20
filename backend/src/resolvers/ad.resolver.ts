@@ -1,13 +1,12 @@
 import AdEntity from "@/entities/Ad.entity";
 import {
   MutationCreateAdArgs,
-  MutationDeleteTagArgs,
+  MutationDeleteAdArgs,
   MutationUpdateAdArgs,
   QueryAdsArgs,
   QueryFindAdArgs,
 } from "@/generated/graphql";
 import AdService from "@/services/ad.service";
-// import { AdCreateType, AdUpdateType, FilterType } from "@/types/ads";
 
 export default {
   Query: {
@@ -42,7 +41,7 @@ export default {
       });
       return adUpdate;
     },
-    deleteAd: async (_: any, { id }: MutationDeleteTagArgs): Promise<string> => {
+    deleteAd: async (_: any, { id }: MutationDeleteAdArgs): Promise<string> => {
       const adDelete = await new AdService().delete(id);
       return `L'annonce ${adDelete} a bien était supprimée`;
     },

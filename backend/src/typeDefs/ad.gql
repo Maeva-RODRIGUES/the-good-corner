@@ -4,16 +4,26 @@ type Ad {
   title: String
   description: String
   price: Float
-  picture: String
+  picture: String!
   location: String
   category: Category
-  tags: [Tag]
-  created_at: String
+  tags: [Tag!]
+  created_at: DateTime
   updated_at: String
 }
 
+type AdCategory {
+  id: ID!
+  title: String!
+  description: String 
+  price: Float!
+  created_at: String!
+  picture: String!
+  location: String!
+}
+
 type Query {
-  ads(filter: FilterType): [Ad]
+  ads(filter: FilterType): [Ad!]
   findAd(id: ID!): Ad
 }
 
@@ -36,6 +46,7 @@ input CreateAdInput {
   price: Float!
   categoryId: String!
   tagsIds: [String!]
+  picture: String
 }
 
 input UpdateAdInput {
@@ -43,6 +54,7 @@ input UpdateAdInput {
   title: String
   description: String
   location: String
+  picture: String
   price: Float
   categoryId: String
   tagsIds: [String!]

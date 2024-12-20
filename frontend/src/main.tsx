@@ -11,11 +11,12 @@ import AdsFromCategory from "./components/Categories/AdsFromCategory.tsx";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
+export const client = new ApolloClient({
+  cache: new InMemoryCache({
+    addTypename: false
+  }),
   uri: "http://localhost:4000",
 });
-
 
 const router = createBrowserRouter([
   {

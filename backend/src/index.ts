@@ -6,7 +6,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import typeDefs from "./typeDefs";
 import resolvers from "./resolvers";
-import datasource from "../src/repositories/lib/datasource";
+import datasource from "./lib/datasource";
 
 
 
@@ -24,9 +24,6 @@ async function main() {
   console.log(`🚀  Server ready at: ${url}`);
 }
 main();
-
-
-
 
 // import express from "express";
 // import adsRouter from "./routes/ads.routes";

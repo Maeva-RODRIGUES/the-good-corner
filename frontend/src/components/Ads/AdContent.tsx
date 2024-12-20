@@ -1,12 +1,13 @@
-import { ProductType } from "@/types/ads";
+
 import defaultPicture from "@/assets/picture.png";
+import { Ad } from "@/generated/graphql";
 
 function AdContent({
   product,
   error,
 }: {
-  product: ProductType;
-  error: string;
+  product: Ad;
+  error?: string;
 }) {
   return (
     <div className="flex flex-col items-center">

@@ -1,6 +1,6 @@
 import AdRepository from './Ad.repository';
 import CategoryEntity from '../entities/Category.entity';
-import datasource from '../repositories/lib/datasource';
+import datasource from '../lib/datasource';
 import { Repository } from 'typeorm';
 import { QueryFindCategoryArgs } from '@/generated/graphql';
 

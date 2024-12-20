@@ -5,27 +5,41 @@ import { ApiResponse } from "@/types/common";
 import { CategoryType } from "@/types/categories";
 import { useEffect, useState } from "react";
 import { categoriesList } from "@/requests/categories.requests";
+import { LIST_CATEGORIES_AND_TAGS } from "@/requetes/categories.requests";
+import { CategoriesAndTagsQuery } from "@/generated/graphql";
+import { useQuery } from "@apollo/client";
+
+import Select, { MultiValue } from "react-select";
 
 function CreateOrEditAdForm({ initialData, submitCall, error }: any) {
-  const [categories, setCategories] = useState<CategoryType[]>();
+  // const [categories, setCategories] = useState<CategoryType[]>();
+  const { data: categoriesAndTags } = useQuery<CategoriesAndTagsQuery>(
+    LIST_CATEGORIES_AND_TAGS
+  );
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [data, setData] = useState<AdCreateFormInfos>(
-    initialData || {
+  const [data, setData] = useState<AdCreateFormInfos>(() => {
+    if (initialData) {
+      const { tagsInfos, ...d } = initialData;
+      return d;
+    }
+    return {
       title: "",
       description: "",
       price: 0,
       picture: "",
       location: "",
       categoryId: "",
-    }
-  );
+      tagsIds: [],
+    };
+  });
 
+  console.log("%c⧭", "color: #d0bfff", data);
   const getCategories = async () => {
     try {
       const data = await categoriesList();
       if (data.success) {
-        setCategories(data.result);
+        // setCategories(data.result);
       }
     } catch (err: any) {
       console.log({ err });
@@ -38,18 +52,18 @@ function CreateOrEditAdForm({ initialData, submitCall, error }: any) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData();
-    if (file) {
-      formData.append("picture", file);
-    }
-    console.log("%c⧭", "color: #735656", data);
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("price", data.price.toString());
-    formData.append("location", data.location);
-    formData.append("categoryId", data.categoryId);
+    // const formData = new FormData();
+    // if (file) {
+    //   formData.append("picture", file);
+    // }
+    // console.log("%c⧭", "color: #735656", data);
+    // formData.append("title", data.title);
+    // formData.append("description", data.description);
+    // formData.append("price", data.price.toString());
+    // formData.append("location", data.location);
+    // formData.append("categoryId", data.categoryId);
     try {
-      submitCall(formData);
+      submitCall(data);
     } catch (err: any) {
       console.log(err);
     }
@@ -61,10 +75,18 @@ function CreateOrEditAdForm({ initialData, submitCall, error }: any) {
     const { name, value } = event.target;
     setData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === "price" ? +value : value,
     }));
   };
 
+  const handleChangeTag = (
+    values: MultiValue<{
+      value: string | null | undefined;
+      label: string | null | undefined;
+    }>
+  ) => {
+    setData({ ...data, tagsIds: values.map((t) => t.value!) });
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFile = e.target.files[0];
@@ -90,7 +112,7 @@ function CreateOrEditAdForm({ initialData, submitCall, error }: any) {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option>Choisir une catégorie</option>
-            {categories?.map((category) => {
+            {categoriesAndTags?.categories?.map((category) => {
               return (
                 <option key={category.id} value={category.id}>
                   {category.title}
@@ -116,8 +138,7 @@ function CreateOrEditAdForm({ initialData, submitCall, error }: any) {
                 field.type === "file" ? handleFileChange(e) : handleChange(e)
               }
               value={
-                field.type === "file" &&
-                data[field.name] === initialData?.picture
+                field.type === "file" && data[field.name] === data?.picture
                   ? ""
                   : data[field.name]
               }
@@ -140,6 +161,20 @@ function CreateOrEditAdForm({ initialData, submitCall, error }: any) {
             <div>Aucune image sélectionnée pour l'instant</div>
           )}
         </div>
+        <Select
+          defaultValue={initialData?.tagsInfos}
+          onChange={(newValue) => handleChangeTag(newValue)}
+          isMulti
+          styles={{
+            option: (styles) => {
+              return { ...styles, color: "blue" };
+            },
+          }}
+          options={categoriesAndTags?.tags?.map((t) => ({
+            value: t.id,
+            label: t.label,
+          }))}
+        />
 
         <button type="submit">Soumettre</button>
       </form>
