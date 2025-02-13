@@ -1,0 +1,4 @@
+type Message {
+    success: Boolean
+    message: String
+}

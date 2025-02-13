@@ -1,0 +1,37 @@
+type User {
+  id: ID!
+  email: String!
+  password: String!
+}
+type UserWithoutPassword {
+  id: ID!
+  email: String!
+}
+
+type CheckToken {
+    email: String
+}
+
+type Query {
+  users: [UserWithoutPassword!]
+  login(infos: InputLogin!): Message!
+  logout: Message!
+  checkToken: CheckToken
+}
+
+type Mutation {
+  register(infos: InputRegister!): UserWithoutPassword
+  # refreshToken: Message!
+}
+
+input InputRegister {
+  email: String!
+  password: String!
+}
+
+input InputLogin {
+  email: String!
+  password: String!
+  rememberMe: Boolean #booléen permettant de demander un refresh Token au Login
+}
+

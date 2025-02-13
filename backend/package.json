@@ -1,0 +1,50 @@
+{
+  "name": "2411-wns-vert-the-good-corner",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node-dev --watch ./src ./src/index.ts",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.3",
+    "@graphql-codegen/typescript": "^4.1.2",
+    "@graphql-codegen/typescript-resolvers": "^4.4.1",
+    "@parcel/watcher": "^2.5.0",
+    "@types/axios": "^0.9.36",
+    "@types/cookies": "^0.9.0",
+    "@types/cors": "^2.8.17",
+    "@types/graphql-depth-limit": "^1.1.6",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.9.0",
+    "ts-node-dev": "^2.0.0"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.2",
+    "@graphql-tools/load-files": "^7.0.0",
+    "@graphql-tools/merge": "^9.0.14",
+    "argon2": "^0.41.1",
+    "axios": "^1.7.9",
+    "class-validator": "^0.14.1",
+    "cookies": "^0.9.1",
+    "cors": "^2.8.5",
+    "graphql": "^16.10.0",
+    "graphql-depth-limit": "^1.1.0",
+    "graphql-scalars": "^1.24.0",
+    "jose": "^5.9.6",
+    "module-alias": "^2.2.3",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.20"
+  },
+  "_moduleAliases": {
+    "@": "./src"
+  }
+}

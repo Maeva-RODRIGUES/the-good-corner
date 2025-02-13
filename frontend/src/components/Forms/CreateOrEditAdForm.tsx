@@ -1,0 +1,175 @@
+import formFields from "@/utils/constants/formFields";
+import instance from "@/lib/instance";
+import { AdCreateFormInfos } from "@/types/ads";
+import { ApiResponse } from "@/types/common";
+import { CategoryType } from "@/types/categories";
+import { useEffect, useState } from "react";
+import { categoriesList } from "@/requests/categories.requests";
+import { LIST_CATEGORIES_AND_TAGS } from "@/requetes/categories.requests";
+import { CategoriesAndTagsQuery } from "@/generated/graphql";
+import { useQuery } from "@apollo/client";
+
+import Select, { MultiValue } from "react-select";
+
+function CreateOrEditAdForm({ initialData, submitCall, error }: any) {
+  // const [categories, setCategories] = useState<CategoryType[]>();
+  const { data: categoriesAndTags } = useQuery<CategoriesAndTagsQuery>(
+    LIST_CATEGORIES_AND_TAGS
+  );
+  const [preview, setPreview] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [data, setData] = useState<AdCreateFormInfos>(() => {
+    if (initialData) {
+      const { tagsInfos, ...d } = initialData;
+      return d;
+    }
+    return {
+      title: "",
+      description: "",
+      price: 0,
+      picture: "",
+      location: "",
+      categoryId: "",
+      tagsIds: [],
+    };
+  });
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData();
+    if (file) {
+      formData.append("file", file, file.name);
+    }
+
+    try {
+      const {
+        data: { filename, status },
+      } = await instance.post<{
+        filename: string;
+        status: string;
+      }>("/upload", formData);
+
+      submitCall({
+        ...data,
+        picture: status === "success" ? filename : data.picture,
+      });
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: name === "price" ? +value : value,
+    }));
+  };
+
+  const handleChangeTag = (
+    values: MultiValue<{
+      value: string | null | undefined;
+      label: string | null | undefined;
+    }>
+  ) => {
+    setData({ ...data, tagsIds: values.map((t) => t.value!) });
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      setPreview(URL.createObjectURL(selectedFile));
+    }
+  };
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
+        <div className="mb-5">
+          <label
+            htmlFor="categoryId"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Catégorie
+          </label>
+          <select
+            name="categoryId"
+            required
+            onChange={handleChange}
+            value={data.categoryId}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option>Choisir une catégorie</option>
+            {categoriesAndTags?.categories?.map((category) => {
+              return (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        {formFields.map((field) => (
+          <div className="mb-3">
+            <label
+              key={field.label}
+              style={{ display: "flex" }}
+              htmlFor={field.name}
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              {field.label}:
+            </label>
+            <input
+              type={field.type}
+              name={field.name}
+              onChange={(e) =>
+                field.type === "file" ? handleFileChange(e) : handleChange(e)
+              }
+              value={
+                field.type === "file" && data[field.name] === data?.picture
+                  ? ""
+                  : data[field.name]
+              }
+              {...(field.type === "file" ? { accept: "image/*" } : {})}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+        ))}
+        <div className="flex justify-center flex-col items-center">
+          <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Prévisualisation
+          </p>
+          {preview ? (
+            <img
+              src={preview}
+              alt="Prévisualisation"
+              style={{ maxWidth: "300px", maxHeight: "300px" }}
+            />
+          ) : (
+            <div>Aucune image sélectionnée pour l'instant</div>
+          )}
+        </div>
+        <Select
+          defaultValue={initialData?.tagsInfos}
+          onChange={(newValue) => handleChangeTag(newValue)}
+          isMulti
+          styles={{
+            option: (styles) => {
+              return { ...styles, color: "blue" };
+            },
+          }}
+          options={categoriesAndTags?.tags?.map((t) => ({
+            value: t.id,
+            label: t.label,
+          }))}
+        />
+
+        <button type="submit">Soumettre</button>
+      </form>
+      {error}
+    </div>
+  );
+}
+export default CreateOrEditAdForm;

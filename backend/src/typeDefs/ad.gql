@@ -1,0 +1,84 @@
+####### Types
+type Ad {
+  id: ID
+  title: String
+  description: String
+  price: Float
+  picture: String!
+  location: String
+  category: Category
+  tags: [Tag!]
+  created_at: DateTime
+  updated_at: String
+}
+
+type AdCategory {
+  id: ID!
+  title: String!
+  description: String
+  price: Float!
+  created_at: String!
+  picture: String!
+  location: String!
+}
+type SearchAdsResult {
+  categoryId: ID!
+  categoryTitle: String!
+  ads: [Ad!]
+}
+
+type InfosForCheckout {
+  id: ID!
+  title: String!
+  description: String
+  picture: String
+  price: Float!
+}
+type Query {
+  ads(filter: FilterType): [Ad!]
+  findAd(id: ID!): Ad
+  searchAd(search: SearchInput!): [SearchAdsResult]
+  getInfosForCheckout(ids: [ID!]!): [InfosForCheckout!]
+}
+
+type Mutation {
+  createAd(data: CreateAdInput!): Ad
+  updateAd(data: UpdateAdInput!): Ad
+  deleteAd(id: ID!): String
+}
+
+####### Inputs
+input SearchInput {
+  text: String!
+}
+input FilterType {
+  limit: Int
+  order: FindOptionOrderValue #prévoir un enum
+}
+
+input CreateAdInput {
+  title: String!
+  description: String
+  location: String
+  price: Float!
+  categoryId: String!
+  tagsIds: [String!]
+  picture: String
+}
+
+input UpdateAdInput {
+  id: ID!
+  title: String
+  description: String
+  location: String
+  picture: String
+  price: Float
+  categoryId: String
+  tagsIds: [String!]
+}
+
+####### Enum
+enum FindOptionOrderValue {
+  ASC
+  DESC
+}
