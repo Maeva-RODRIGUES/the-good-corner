@@ -252,11 +252,17 @@ export type MutationUpdateTagArgs = {
   data: UpdateTagInput;
 };
 
+export type ProductSessionInput = {
+  id: Scalars['ID']['input'];
+  quantity: Scalars['Int']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   ads?: Maybe<Array<Ad>>;
   categories?: Maybe<Array<Category>>;
   checkToken?: Maybe<CheckToken>;
+  createSession?: Maybe<Scalars['JSON']['output']>;
   findAd?: Maybe<Ad>;
   findCategory?: Maybe<FindCategory>;
   findTag?: Maybe<Tag>;
@@ -271,6 +277,11 @@ export type Query = {
 
 export type QueryAdsArgs = {
   filter?: InputMaybe<FilterType>;
+};
+
+
+export type QueryCreateSessionArgs = {
+  productSessionInput?: InputMaybe<Array<InputMaybe<ProductSessionInput>>>;
 };
 
 
@@ -500,6 +511,7 @@ export type ResolversTypes = {
   PositiveFloat: ResolverTypeWrapper<Scalars['PositiveFloat']['output']>;
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>;
   PostalCode: ResolverTypeWrapper<Scalars['PostalCode']['output']>;
+  ProductSessionInput: ProductSessionInput;
   Query: ResolverTypeWrapper<{}>;
   RGB: ResolverTypeWrapper<Scalars['RGB']['output']>;
   RGBA: ResolverTypeWrapper<Scalars['RGBA']['output']>;
@@ -602,6 +614,7 @@ export type ResolversParentTypes = {
   PositiveFloat: Scalars['PositiveFloat']['output'];
   PositiveInt: Scalars['PositiveInt']['output'];
   PostalCode: Scalars['PostalCode']['output'];
+  ProductSessionInput: ProductSessionInput;
   Query: {};
   RGB: Scalars['RGB']['output'];
   RGBA: Scalars['RGBA']['output'];
@@ -918,6 +931,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   ads?: Resolver<Maybe<Array<ResolversTypes['Ad']>>, ParentType, ContextType, Partial<QueryAdsArgs>>;
   categories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
   checkToken?: Resolver<Maybe<ResolversTypes['CheckToken']>, ParentType, ContextType>;
+  createSession?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType, Partial<QueryCreateSessionArgs>>;
   findAd?: Resolver<Maybe<ResolversTypes['Ad']>, ParentType, ContextType, RequireFields<QueryFindAdArgs, 'id'>>;
   findCategory?: Resolver<Maybe<ResolversTypes['FindCategory']>, ParentType, ContextType, RequireFields<QueryFindCategoryArgs, 'data'>>;
   findTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<QueryFindTagArgs, 'id'>>;

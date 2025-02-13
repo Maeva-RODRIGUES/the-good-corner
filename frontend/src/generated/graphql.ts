@@ -253,11 +253,17 @@ export type MutationUpdateTagArgs = {
   data: UpdateTagInput;
 };
 
+export type ProductSessionInput = {
+  id: Scalars['ID']['input'];
+  quantity: Scalars['Int']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   ads?: Maybe<Array<Ad>>;
   categories?: Maybe<Array<Category>>;
   checkToken?: Maybe<CheckToken>;
+  createSession?: Maybe<Scalars['JSON']['output']>;
   findAd?: Maybe<Ad>;
   findCategory?: Maybe<FindCategory>;
   findTag?: Maybe<Tag>;
@@ -272,6 +278,11 @@ export type Query = {
 
 export type QueryAdsArgs = {
   filter?: InputMaybe<FilterType>;
+};
+
+
+export type QueryCreateSessionArgs = {
+  productSessionInput?: InputMaybe<Array<InputMaybe<ProductSessionInput>>>;
 };
 
 

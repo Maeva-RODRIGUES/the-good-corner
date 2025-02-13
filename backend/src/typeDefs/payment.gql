@@ -1,0 +1,8 @@
+type Query {
+  createSession(productSessionInput: [ProductSessionInput]): JSON
+}
+
+input ProductSessionInput {
+  id: ID!
+  quantity: Int!
+}

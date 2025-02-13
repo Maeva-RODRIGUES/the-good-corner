@@ -25,6 +25,8 @@ import Register from "./components/auth/Register.tsx";
 import Logout from "./components/auth/Logout.tsx";
 import ProtectedArea from "./components/auth/ProtectedArea.tsx";
 import { onError } from "@apollo/client/link/error";
+import PaymentSuccess from "./components/payment/PaymentSuccess.tsx";
+import PaymentCancel from "./components/payment/PaymentCancel.tsx";
 // Création du httpLink séparément car on va l'utiliser avec from()
 const httpLink = new HttpLink({
   uri: "http://localhost:4005",
@@ -65,7 +67,7 @@ export const client = new ApolloClient({
   }),
   // uri: "http://localhost:4005",
   link: from([errorLink, httpLink]),
-  credentials: "include",
+  // credentials: "include",
 });
 
 const router = createBrowserRouter([
@@ -91,6 +93,8 @@ const router = createBrowserRouter([
       { path: "/auth/login", element: <Login /> },
       { path: "/auth/register", element: <Register /> },
       { path: "/auth/logout", element: <Logout /> },
+      { path: "/payment/success", element: <PaymentSuccess /> },
+      { path: "/payment/cancel", element: <PaymentCancel /> },
     ],
   },
 ]);

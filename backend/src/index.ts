@@ -34,67 +34,65 @@ const server = new ApolloServer<MyContext>({
   validationRules: [depthLimit(5)], //n+1
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
+
+// Configuration CORS commune
+const corsOptions: cors.CorsOptions = {
+  origin: ["http://localhost:5173", "https://studio.apollographql.com"],
+  credentials: true,
+};
+
+// Middlewares communs
+const commonMiddleware = [
+  cors<cors.CorsRequest>(corsOptions),
+  express.json({ limit: "50mb" }),
+];
+
 async function main() {
   await server.start();
   //route dédiée au refreshtoken :  (séparation des responsabilités!)
+  app.post("/auth/refresh", ...commonMiddleware, async (req, res) => {
+    const cookies = new Cookies(req, res);
+    const refreshToken = cookies.get("refreshtoken");
 
-  app.post(
-    "/auth/refresh",
-    cors<cors.CorsRequest>({
-      origin: ["http://localhost:5173", "https://studio.apollographql.com"],
-      credentials: true,
-    }),
-    // cors<cors.CorsRequest>({origin: ["http://localhost:5173"]}),
-    express.json({ limit: "50mb" }),
-    async (req, res) => {
-      const cookies = new Cookies(req, res);
-      const refreshToken = cookies.get("refreshtoken");
+    if (!refreshToken) {
+      res.status(401).json({ message: "Pas de refresh token" });
+      return;
+    }
+    try {
+      const refreshService = new RefreshTokenService();
+      const refreshData = await refreshService.findRefreshToken(refreshToken);
 
-      if (!refreshToken) {
-        res.status(401).json({ message: "Pas de refresh token" });
+      if (!refreshData || refreshData.expiresAt < new Date()) {
+        cookies.set("token", null);
+        cookies.set("refreshtoken", null);
+        res.status(401).json({ message: "Refresh token invalide" });
         return;
       }
-      try {
-        const refreshService = new RefreshTokenService();
-        const refreshData = await refreshService.findRefreshToken(refreshToken);
 
-        if (!refreshData || refreshData.expiresAt < new Date()) {
-          cookies.set("token", null);
-          cookies.set("refreshtoken", null);
-          res.status(401).json({ message: "Refresh token invalide" });
-          return;
-        }
+      // Création du nouveau token
+      const newToken = await new SignJWT({ email: refreshData.user.email })
+        .setProtectedHeader({ alg: "HS256", typ: "jwt" })
+        .setExpirationTime("2h")
+        .sign(new TextEncoder().encode(process.env.SECRET_KEY));
 
-        // Création du nouveau token
-        const newToken = await new SignJWT({ email: refreshData.user.email })
-          .setProtectedHeader({ alg: "HS256", typ: "jwt" })
-          .setExpirationTime("2h")
-          .sign(new TextEncoder().encode(process.env.SECRET_KEY));
+      // Mise à jour du cookie avec le nouveau token
+      cookies.set("token", newToken, {
+        httpOnly: true,
+        // secure: process.env.NODE_ENV === "production",
+      });
 
-        // Mise à jour du cookie avec le nouveau token
-        cookies.set("token", newToken, {
-          httpOnly: true,
-          // secure: process.env.NODE_ENV === "production",
-        });
+      // Mise à jour de la dernière utilisation
+      await refreshService.used(refreshData);
 
-        // Mise à jour de la dernière utilisation
-        await refreshService.used(refreshData);
-
-        res.json({ success: true });
-      } catch (error) {
-        console.error("Erreur refresh:", error);
-        res.status(500).json({ message: "Erreur serveur" });
-      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Erreur refresh:", error);
+      res.status(500).json({ message: "Erreur serveur" });
     }
-  );
+  });
   app.use(
     "/",
-    cors<cors.CorsRequest>({
-      origin: ["http://localhost:5173", "https://studio.apollographql.com"],
-      credentials: true,
-    }),
-    // cors<cors.CorsRequest>({origin: ["http://localhost:5173"]}),
-    express.json({ limit: "50mb" }),
+    ...commonMiddleware,
     expressMiddleware(server, {
       context: async ({ req, res }) => {
         let user: UserEntity | null = null;
